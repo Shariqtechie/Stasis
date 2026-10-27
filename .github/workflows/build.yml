@@ -1,5 +1,11 @@
-name: Build
-on: { workflow_dispatch: {}, push: { branches: [main] } }
+name: Build & Release
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   win:
     runs-on: windows-latest
@@ -9,5 +15,20 @@ jobs:
         with: { node-version: 20 }
       - run: npm install
       - run: npm run build
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory dist | Out-Null
+          Copy-Item src-tauri/target/release/stasis.exe dist/Stasis.exe
+          $h = (Get-FileHash dist/Stasis.exe -Algorithm SHA256).Hash.ToLower()
+          "$h  Stasis.exe" | Out-File dist/Stasis.exe.sha256 -Encoding ascii
       - uses: actions/upload-artifact@v4
-        with: { name: Stasis, path: src-tauri/target/release/stasis.exe }
+        with:
+          name: Stasis
+          path: dist/*
+          if-no-files-found: error
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: dist/*
+          generate_release_notes: true
