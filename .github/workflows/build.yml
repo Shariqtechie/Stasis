@@ -19,9 +19,9 @@ jobs:
   win:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: 22 }
 
       - name: Resolve version
         id: v
@@ -90,7 +90,7 @@ jobs:
           $h = (Get-FileHash dist/Stasis.exe -Algorithm SHA256).Hash.ToLower()
           "$h  Stasis.exe" | Out-File dist/Stasis.exe.sha256 -Encoding ascii
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Stasis
           path: dist/*

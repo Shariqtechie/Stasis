@@ -119,7 +119,7 @@ fn version() -> String { env!("CARGO_PKG_VERSION").to_string() }
 fn open_url(url: String) -> Result<(), String> {
     const OK: [&str; 3] = ["https://github.com/Shariqtechie/Stasis", "https://x.com/intent/post", "https://www.reddit.com/submit"];
     if !OK.iter().any(|p| url.starts_with(p)) { return Err("Blocked link".into()); }
-    std::process::Command::new("explorer").arg(&url).spawn().map(|_| ()).map_err(|e| e.to_string())
+    std::process::Command::new("rundll32").args(["url.dll,FileProtocolHandler", url.as_str()]).spawn().map(|_| ()).map_err(|e| e.to_string())
 }
 
 fn main() {

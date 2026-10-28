@@ -48,7 +48,7 @@ $("abt").onclick=()=>setAbout(true);$("closeab").onclick=()=>setAbout(false);
 $("about").onclick=e=>{if(e.target===$("about"))return setAbout(false);const u=e.target.closest("[data-u]");if(u)inv("open_url",{url:u.dataset.u}).catch(x=>toast(String(x),1))};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")setAbout(false)});
 $("share").onclick=()=>inv("open_url",{url:"https://x.com/intent/post?text="+encodeURIComponent("Stasis freezes Windows Update for up to 5 years. Free and open source.")+"&url="+encodeURIComponent(REPO)}).catch(x=>toast(String(x),1));
-$("copy").onclick=()=>navigator.clipboard.writeText(REPO).then(()=>toast("Link copied")).catch(()=>toast(REPO));
+$("copy").onclick=()=>navigator.clipboard.writeText(REPO).then(()=>{$("copyl").textContent="Copied";setTimeout(()=>$("copyl").textContent="Copy link",1600);toast("Link copied")}).catch(()=>toast(REPO));
 inv("version").then(v=>$("ver").textContent="v"+v).catch(()=>{});
 refresh().catch(e=>toast(String(e),1));
 const W=window.__TAURI__.window.getCurrentWindow();

@@ -19,11 +19,15 @@ All notable changes to Stasis are documented here. When you run the release work
 - Landing page, redesigned README with an animated demo and a theme-aware star chart, issue templates, security policy, and VM test sheet
 
 ### Changed
+- About panel redesigned with an app mark, a star button, and share, copy, and bug report tiles
+- Release workflow actions upgraded to Node 24 versions
 - Project renamed from Windows Update Pause Manager to Stasis
 - Backups now live in %APPDATA%\Stasis\backups instead of the working folder
 - Buttons are disabled while an action is running
 
 ### Fixed
+- Share on X opened File Explorer instead of the browser
+- The Link copied confirmation was hidden behind the About panel
 - The custom date option was missing from the old app
 - Backups could land in System32 when run as administrator
 - Pauses longer than 5 weeks are recognized as Stasis freezes, since Windows Settings cannot make them
