@@ -43,7 +43,7 @@ $("ext").onclick=()=>{ext=!ext;sel=ext?null:1095;$("date").value="";render()};
 $("resume").onclick=()=>run(inv("resume"));
 $("list").onclick=e=>{const n=e.target.dataset.n;if(n)run(inv("restore",{name:n}))};
 // About panel
-const setAbout=on=>{$("about").hidden=!on;document.documentElement.classList.toggle("dim",on)};
+const setAbout=on=>document.documentElement.classList.toggle("dim",on);
 $("abt").onclick=()=>setAbout(true);$("closeab").onclick=()=>setAbout(false);
 $("about").onclick=e=>{if(e.target===$("about"))return setAbout(false);const u=e.target.closest("[data-u]");if(u)inv("open_url",{url:u.dataset.u}).catch(x=>toast(String(x),1))};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")setAbout(false)});

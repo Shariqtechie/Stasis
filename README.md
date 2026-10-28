@@ -14,7 +14,7 @@
 
 <br>
 
-<img src="assets/screenshot.png" alt="Stasis app screenshot" width="340">
+<img src="assets/demo.svg" alt="Stasis freezing Windows Update in one click" width="100%">
 
 </div>
 
