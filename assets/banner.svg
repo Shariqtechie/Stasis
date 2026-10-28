@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" font-family="Segoe UI,Helvetica,Arial,sans-serif">
+<defs><radialGradient id="g" cx="50%" cy="0%" r="80%"><stop offset="0" stop-color="#1b3a7a"/><stop offset="1" stop-color="#07090f"/></radialGradient>
+<linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fe1ff"/><stop offset="1" stop-color="#8b7bff"/></linearGradient></defs>
+<rect width="1200" height="420" fill="url(#g)"/>
+<g transform="translate(200 210) rotate(-90)"><circle r="120" fill="none" stroke="#ffffff" stroke-opacity=".1" stroke-width="10"/>
+<circle r="120" fill="none" stroke="url(#a)" stroke-width="10" stroke-linecap="round" stroke-dasharray="754" stroke-dashoffset="754"><animate attributeName="stroke-dashoffset" from="754" to="300" dur="2.6s" fill="freeze" calcMode="spline" keySplines=".2 .8 .2 1" keyTimes="0;1"/></circle></g>
+<text x="200" y="228" text-anchor="middle" font-size="64" font-weight="200" fill="#eaf2ff">1095</text>
+<text x="200" y="260" text-anchor="middle" font-size="18" fill="#8b97ad">days frozen</text>
+<text x="400" y="200" font-size="104" font-weight="800" fill="#eaf2ff">Stasis</text>
+<text x="404" y="262" font-size="30" fill="#8b97ad">Freeze Windows Update for years, not weeks.</text>
+<text x="404" y="312" font-size="20" fill="#7fe1ff">One click · up to 5 years · free and open source</text></svg>

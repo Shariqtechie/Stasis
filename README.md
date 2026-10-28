@@ -1,135 +1,91 @@
 <div align="center">
 
-<pre>
-██╗    ██╗██╗   ██╗██████╗ ███╗   ███╗
-██║    ██║██║   ██║██╔══██╗████╗ ████║
-██║ █╗ ██║██║   ██║██████╔╝██╔████╔██║
-██║███╗██║██║   ██║██╔═══╝ ██║╚██╔╝██║
-╚███╔███╔╝╚██████╔╝██║     ██║ ╚═╝ ██║
- ╚══╝╚══╝  ╚═════╝ ╚═╝     ╚═╝     ╚═╝
-</pre>
+<img src="assets/banner.svg" alt="Stasis: freeze Windows Update for years, not weeks" width="100%">
 
-**Windows Update Pause Manager**
+[![Download](https://img.shields.io/github/v/release/Shariqtechie/pause-windows-updates?label=download&color=7fe1ff&style=for-the-badge)](https://github.com/Shariqtechie/pause-windows-updates/releases/latest)
+[![Stars](https://img.shields.io/github/stars/Shariqtechie/pause-windows-updates?style=for-the-badge&color=8b7bff)](https://github.com/Shariqtechie/pause-windows-updates/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/Shariqtechie/pause-windows-updates/total?style=for-the-badge&color=5cf2c3)](https://github.com/Shariqtechie/pause-windows-updates/releases)
+[![License](https://img.shields.io/github/license/Shariqtechie/pause-windows-updates?style=for-the-badge)](LICENSE)
 
-*Freeze Windows Updates. Any date. One click. Zero bloat.*
+**Windows 11 lets you pause updates for 5 weeks. Stasis pauses them for up to 5 years.**
 
-[![Windows 10](https://img.shields.io/badge/Windows-10%20Pro-0078D6?style=flat-square&logo=windows&logoColor=white)](https://github.com/Shariqtechie/pause-windows-updates)
-[![Windows 11](https://img.shields.io/badge/Windows-11-0078D6?style=flat-square&logo=windows&logoColor=white)](https://github.com/Shariqtechie/pause-windows-updates)
-[![MIT License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://github.com/Shariqtechie/pause-windows-updates/blob/main/LICENSE)
-[![UAC Ready](https://img.shields.io/badge/UAC-Auto--Elevate-orange?style=flat-square&logo=shield&logoColor=white)](https://github.com/Shariqtechie/pause-windows-updates)
-[![No Background Services](https://img.shields.io/badge/CPU%20Idle-0%25-brightgreen?style=flat-square)](https://github.com/Shariqtechie/pause-windows-updates)
-
----
-
-<img src="screenshot.png" alt="WUPM Preview" width="420"/>
-
----
+[Download](https://github.com/Shariqtechie/pause-windows-updates/releases/latest/download/Stasis.exe) · [Website](https://shariqtechie.github.io/pause-windows-updates/) · [Report a bug](../../issues/new/choose)
 
 </div>
 
-## ⚡ What It Does
+> Stasis was formerly *Windows Update Pause Manager*. Same tool, rebuilt from scratch with a native app and a new look.
 
-Set your updates to pause until **2029**, **2035**, or any date you choose — then walk away. No background services. No tray icon. No bloat. One click and it's done.
+<!-- TODO: add a screen recording here: ![Stasis demo](assets/demo.gif) -->
 
----
+## Why Stasis
 
-## 🔬 How It Works
-
-Deep registry forensics revealed something Windows doesn't advertise:
-
-```
-HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings
-          │
-          ├─► PauseUpdatesExpiryTime          ◄── Set to any future date
-          ├─► PauseFeatureUpdatesEndTime      ◄── Survives every reboot ✅
-          ├─► PauseQualityUpdatesEndTime      ◄── UI syncs automatically ✅
-          └─► PauseFeatureUpdatesStartTime    ◄── Clean restore anytime ✅
-```
-
-> **The Discovery:** Windows Update's UI reads directly from these keys and accepts arbitrary future dates without resetting them on boot. Set `2029-06-16T07:56:22Z` — Windows shows *"paused until 2029"* — permanently, until **you** say otherwise.
-
----
-
-## ✨ Features
-
-| | Feature | Detail |
+| | Windows Settings | Stasis |
 |---|---|---|
-| 🛡️ | **Auto UAC Elevation** | Detects admin rights, prompts if needed |
-| 📦 | **Backup Before Every Change** | JSON snapshot: `wua_pause_backup_YYYYMMDD_HHMMSS.json` |
-| ⚡ | **7 Pause Presets** | 7 Days · 30 Days · 90 Days · 1 Year · 3 Years · 5 Years |
-| 📅 | **Custom Date Input** | Set any precise target date |
-| 🧼 | **One-Click Restore** | Resume Updates clears all keys cleanly |
-| 🚫 | **Zero Overhead** | 0% CPU when closed. No services. No tray. |
+| Longest pause | 5 weeks | Up to 5 years |
+| Pick your own end date | No | Yes |
+| Backup before changes | No | Automatic |
+| Undo | Resume only | Resume or restore any backup |
+| Size | Built in | About 5 MB, native |
 
----
+## Features
 
-## 🚀 Quick Start
+- **One click:** pick 7 days to 5 years, or set a custom end date.
+- **Live countdown** showing how long your PC stays frozen.
+- **Automatic backups** of your settings before every change, with one-click restore.
+- **Shows in Windows Settings:** it writes the same pause values Windows already uses.
+- **Private:** no network access, no telemetry, no account.
+- **Tiny and native:** built with Rust and Tauri, with no Python runtime.
 
-```bash
-# 1. Download from Releases
-pause_manager.exe
+## Quick start
 
-# 2. Double-click → Accept UAC prompt
+1. Download **[Stasis.exe](https://github.com/Shariqtechie/pause-windows-updates/releases/latest/download/Stasis.exe)** from the latest release.
+2. Run it and allow the admin prompt. The pause values live in `HKEY_LOCAL_MACHINE`.
+3. Choose a duration and click **Freeze updates**.
+4. Click **Resume updates** whenever you want to go back to normal.
 
-# 3. Pick a preset or enter a custom date
+Windows SmartScreen may warn about a new, unsigned app. Check the SHA256 file in the release against your download, or build from source below.
 
-# 4. Click Apply ✅
-```
+## Compatibility
 
-> Done. Updates are frozen until your chosen date, reboot-proof.
+| Edition | 23H2 | 24H2 | 25H2 |
+|---|---|---|---|
+| Windows 11 Home | 🟡 Testing | 🟡 Testing | 🟡 Testing |
+| Windows 11 Pro | 🟡 Testing | 🟡 Testing | 🟡 Testing |
+| Windows 11 Enterprise | 🟡 Testing | 🟡 Testing | 🟡 Testing |
 
----
+Windows 10 reached end of support in October 2025, so it is low priority. Results go here as each edition is verified in a virtual machine: freeze, reboot, check Settings, resume. Tested something? [Tell us](../../issues/new/choose).
 
-## 🔒 Backup Format
+## Security note
 
-Every change writes a timestamped backup to your working directory:
+Freezing updates also pauses security patches. Pick a duration you are comfortable with, and resume to catch up every few months. Stasis is a convenience tool, not a security product.
 
-```json
-{
-  "PauseUpdatesExpiryTime":         { "value": "2029-01-01T00:00:00Z", "type": 1 },
-  "PauseFeatureUpdatesStartTime":   { "value": "2026-06-09T07:56:22Z", "type": 1 },
-  "PauseFeatureUpdatesEndTime":     { "value": "2029-01-01T00:00:00Z", "type": 1 },
-  "PauseQualityUpdatesStartTime":   { "value": "2026-06-09T07:56:22Z", "type": 1 },
-  "PauseQualityUpdatesEndTime":     { "value": "2029-01-01T00:00:00Z", "type": 1 }
-}
-```
+## Build from source
 
-Restore anytime. No re-install needed.
-
----
-
-## 🧪 Compatibility
-
-> [!IMPORTANT]
-> Developed and strictly tested on **Windows 10 Pro**.
-> Highly likely to work on Windows 11 and Home editions — same registry paths. Use with discretion on unverified versions. Keep your backups.
-
----
-
-## 🤝 Contributing
+Needs Node 20+ and the [Rust toolchain](https://rustup.rs) on Windows.
 
 ```bash
-git checkout -b feature/YourFeature
-git commit -m "Added something cool"
-git push origin feature/YourFeature
-# → Open a Pull Request
+npm install
+npm run build        # outputs src-tauri/target/release/stasis.exe
 ```
 
-Bug reports, issues, and ideas are all welcome. Start a discussion anytime.
+Or let GitHub Actions do it: push a tag like `v1.2.0` and the release appears with the exe and its SHA256.
 
----
+## Roadmap
 
-## 📝 License
+- [ ] Resume reminder before your freeze ends
+- [ ] Frameless Mica window
+- [ ] Verified results for every Windows 11 edition
+- [ ] winget and Scoop packages
+- [ ] Signed releases
 
-MIT — see [`LICENSE`](LICENSE) for details.
+## Contributing
 
----
+Bugs, ideas, and VM test results are all welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-<div align="center">
+## Star history
 
-> *This utility edits registry flags associated with Windows Update Settings.*
-> *Run updates occasionally to keep your system secure.*
+[![Star History](https://api.star-history.com/svg?repos=Shariqtechie/pause-windows-updates&type=Date)](https://star-history.com/#Shariqtechie/pause-windows-updates&Date)
 
-**[⬇️ Download Latest Release](https://github.com/Shariqtechie/pause-windows-updates/releases)** · **[🐛 Report Bug](https://github.com/Shariqtechie/pause-windows-updates/issues)** · **[💡 Request Feature](https://github.com/Shariqtechie/pause-windows-updates/issues)**
+## License
 
-</div>
+MIT. Not affiliated with or endorsed by Microsoft.
