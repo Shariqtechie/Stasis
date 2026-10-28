@@ -15,7 +15,7 @@ h1{font-size:clamp(40px,6vw,72px);font-weight:800}
 .cta{display:flex;gap:12px;flex-wrap:wrap}.sub{color:var(--mut);font-size:13px;margin-top:16px}
 .app{width:300px;margin:auto;border:1px solid var(--line);border-radius:22px;padding:22px;background:var(--glass);backdrop-filter:blur(20px);box-shadow:0 40px 80px -30px rgba(127,225,255,.35);transform:rotate(2deg)}
 .app small{color:var(--mut);font-size:11px}.ring{position:relative;width:180px;height:180px;margin:14px auto 6px}
-.ring svg{transform:rotate(-90deg)}.ring .t{stroke:var(--line)}.ring .b{stroke:var(--ice);stroke-linecap:round;filter:drop-shadow(0 0 8px var(--ice));stroke-dasharray:282.7;stroke-dashoffset:282.7;animation:draw 2.4s .3s cubic-bezier(.2,.8,.2,1) forwards}
+.ring svg{transform:rotate(-90deg);overflow:visible}.ring .t{stroke:var(--line)}.ring .b{stroke:var(--ice);stroke-linecap:round;stroke-dasharray:282.7;stroke-dashoffset:282.7;animation:draw 2.4s .3s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes draw{to{stroke-dashoffset:112}}
 .ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}.ring b{font:200 44px "Bricolage Grotesque";font-variant-numeric:tabular-nums}.ring span{font-size:12px;color:var(--mut)}
 .app h4{text-align:center;font-size:15px;margin-bottom:12px}
