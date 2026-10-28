@@ -1,35 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stasis</title>
-<style>
-:root{--bg:#07090f;--glass:rgba(255,255,255,.055);--line:rgba(255,255,255,.1);--tx:#eaf2ff;--mut:#8b97ad;--ice:#7fe1ff;--vio:#8b7bff;--warn:#ffb454;--ok:#5cf2c3}
-*{box-sizing:border-box;margin:0}
-body{font-family:"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;background:radial-gradient(70% 45% at 50% 0,#14234a 0,transparent 70%),var(--bg);color:var(--tx);min-height:100vh;padding:22px 22px 28px;user-select:none}
-body.live{--glow:var(--warn)}body.frozen{--glow:var(--ice)}
-h1{font-size:15px;font-weight:600;letter-spacing:.04em}.os{color:var(--mut);font-size:12px;margin-top:2px}
-.hero{position:relative;width:230px;height:230px;margin:20px auto 8px}
-.hero svg{width:100%;height:100%;transform:rotate(-90deg)}
-.track{stroke:var(--line)}.bar{stroke:var(--glow,var(--mut));stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 10px var(--glow,transparent))}
-.mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
-.mid b{font-size:52px;font-weight:200;line-height:1;font-variant-numeric:tabular-nums}.mid span{color:var(--mut);font-size:13px;margin-top:6px}
-.state{text-align:center;font-size:19px;font-weight:600}.until{text-align:center;color:var(--mut);font-size:13px;margin:4px 0 20px}
-.card{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:16px;backdrop-filter:blur(18px);margin-bottom:12px}
-.card p{font-size:13px;color:var(--mut);margin-bottom:10px}
-.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.chip{padding:10px 0;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--tx);font:inherit;font-size:13px;cursor:pointer;transition:.15s}
-.chip:hover{border-color:var(--ice)}.chip.on{background:linear-gradient(135deg,var(--ice),var(--vio));color:#06101f;border-color:transparent;font-weight:600}
-input[type=date]{width:100%;margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--tx);font:inherit;color-scheme:dark}
-.go{width:100%;padding:14px;border:0;border-radius:12px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;color:#06101f;background:linear-gradient(135deg,var(--ice),var(--vio));box-shadow:0 8px 30px -8px var(--ice);transition:transform .15s}
-.go:active{transform:scale(.98)}.go:disabled{opacity:.5}
-.ghost{background:none;border:0;color:var(--mut);font:inherit;font-size:13px;cursor:pointer;padding:6px 0}.ghost:hover{color:var(--tx)}
-.row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mut);padding:5px 0}
-.row button{color:var(--ice);background:none;border:0;cursor:pointer;font:inherit}
-.note{font-size:11.5px;color:var(--mut);line-height:1.5;text-align:center;margin-top:8px}
-#toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,90px);background:#111a2e;border:1px solid var(--line);padding:11px 18px;border-radius:12px;font-size:13px;transition:.3s}
-#toast.show{transform:translate(-50%,0)}#toast.err{border-color:#ff6b7a}
-button:focus-visible,input:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
-</style></head><body class="live">
+<link rel="stylesheet" href="style.css"></head><body class="live">
 <h1>Stasis</h1><div class="os" id="os">Reading system…</div>
-<div class="hero"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45" fill="none" stroke-width="3"/><circle id="bar" class="bar" cx="50" cy="50" r="45" fill="none" stroke-width="3" stroke-dasharray="282.7" stroke-dashoffset="282.7"/></svg>
+<div class="hero"><svg viewBox="0 0 100 100"><defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter></defs><circle class="track" cx="50" cy="50" r="45" fill="none" stroke-width="3"/><circle id="glow" class="glow" cx="50" cy="50" r="45" fill="none" stroke-width="6" stroke-dasharray="282.7" stroke-dashoffset="282.7" filter="url(#gl)"/><circle id="bar" class="bar" cx="50" cy="50" r="45" fill="none" stroke-width="3" stroke-dasharray="282.7" stroke-dashoffset="282.7"/></svg>
 <div class="mid"><b id="days">0</b><span>days frozen</span></div></div>
 <div class="state" id="state">Updates are running</div><div class="until" id="until">Nothing is paused yet</div>
 <div class="card"><p>Freeze updates for</p><div class="chips" id="chips"></div><input type="date" id="date" hidden aria-label="Custom end date"></div>
@@ -38,28 +10,4 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ice);outline-of
 <div class="card" id="bk" hidden><p>Backups (saved before every change)</p><div id="list"></div></div>
 <div class="note">Frozen updates include security patches. Resume and update every few months.</div>
 <div id="toast"></div>
-<script>
-const inv=(c,a)=>window.__TAURI__.core.invoke(c,a);
-const P=[["7 days",7],["30 days",30],["90 days",90],["1 year",365],["3 years",1095],["5 years",1825],["Custom",0]];
-let sel=1095;const $=i=>document.getElementById(i);
-$("chips").innerHTML=P.map(([t,d])=>`<button class="chip${d==sel?" on":""}" data-d="${d}">${t}</button>`).join("");
-$("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;sel=+b.dataset.d;
- document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c==b));$("date").hidden=sel!==0};
-function toast(m,err){const t=$("toast");t.textContent=m;t.className="show"+(err?" err":"");setTimeout(()=>t.className="",3200)}
-async function refresh(){
- const s=await inv("status");$("os").textContent=s.os;
- document.body.className=s.paused?"frozen":"live";
- $("state").textContent=s.paused?"Updates are frozen":"Updates are running";
- $("until").textContent=s.paused?"Until "+new Date(s.expiry).toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"}):"Nothing is paused yet";
- let n=0,t=Math.max(s.days_left,0);const el=$("days"),st=performance.now();
- (function f(now){const p=Math.min((now-st)/900,1);el.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(st);
- $("bar").style.strokeDashoffset=282.7*(1-Math.min(t/1825,1));
- const b=await inv("backups");$("bk").hidden=!b.length;
- $("list").innerHTML=b.slice(0,3).map(n=>`<div class="row"><span>${n.replace("stasis_","").replace(".json","").replace("_"," ")}</span><button data-n="${n}">Restore</button></div>`).join("");
-}
-async function run(p){try{toast(await p);await refresh()}catch(e){toast(String(e),1)}}
-$("go").onclick=()=>run(sel?inv("apply",{days:sel}):inv("apply",{date:$("date").value}));
-$("resume").onclick=()=>run(inv("resume"));
-$("list").onclick=e=>{const n=e.target.dataset.n;if(n)run(inv("restore",{name:n}))};
-refresh().catch(e=>toast(String(e),1));
-</script></body></html>
+<script src="app.js"></script></body></html>
