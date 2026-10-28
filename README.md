@@ -27,6 +27,16 @@
 | Undo | Resume only | Resume or restore any backup |
 | Size | Built in | About 5 MB, native |
 
+## Why not just disable Windows Update?
+
+Many "disable Windows Update" scripts and tools stop services, block Microsoft servers, or rewrite system policies. People regularly report that this can break the Microsoft Store and app installs, and some say the only fix they found was reinstalling Windows.
+
+Stasis does none of that. It only sets the same pause dates that Windows Settings uses.
+
+- **No services are disabled or removed.** The Microsoft Store, Defender, and app installs keep working.
+- **No system files are touched.** The only change is a few pause values in the registry, and each one is backed up first.
+- **Easy to undo, even without Stasis.** Open **Settings → Windows Update** and click **Resume updates**. You don't need the app to go back to normal.
+
 ## Features
 
 - **One click:** pick 7 days to 5 years, or set a custom end date.
@@ -41,7 +51,7 @@
 1. Download **[Stasis.exe](https://github.com/Shariqtechie/Stasis/releases/latest/download/Stasis.exe)** from the latest release.
 2. Run it and allow the admin prompt. The pause values live in `HKEY_LOCAL_MACHINE`.
 3. Choose a duration and click **Freeze updates**.
-4. Click **Resume updates** whenever you want to go back to normal.
+4. To go back to normal, click **Resume updates** in Stasis, or open **Settings → Windows Update** and click **Resume updates** there. Stasis doesn't need to be open.
 
 Windows SmartScreen may warn about a new, unsigned app. Check the SHA256 file in the release against your download, or build from source below.
 
@@ -73,7 +83,8 @@ Or let GitHub Actions do it: push a tag like `v1.2.0` and the release appears wi
 ## Roadmap
 
 - [ ] Resume reminder before your freeze ends
-- [ ] Frameless Mica window
+- [x] Frameless Mica window
+- [x] About panel, plus extend-freeze controls
 - [ ] Verified results for every Windows 11 edition
 - [ ] winget and Scoop packages
 - [ ] Signed releases

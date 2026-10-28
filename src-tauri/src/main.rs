@@ -10,7 +10,7 @@ const KEYS: [&str; 6] = ["PauseUpdatesExpiryTime","PauseFeatureUpdatesStartTime"
 type Snap = BTreeMap<String, Option<String>>;
 
 #[derive(Serialize)]
-struct Status { paused: bool, expiry: Option<String>, days_left: i64, total_days: i64, os: String }
+struct Status { paused: bool, expiry: Option<String>, days_left: i64, total_days: i64, by_app: bool, os: String }
 
 fn hklm() -> RegKey { RegKey::predef(HKEY_LOCAL_MACHINE) }
 fn dir() -> PathBuf {
@@ -31,6 +31,10 @@ fn write_snap(s: &Snap) -> Result<(), String> {
     }
     Ok(())
 }
+fn state_file() -> PathBuf { dir().parent().unwrap().join("state.json") }
+fn mark(expiry: Option<&str>) {
+    match expiry { Some(e) => { let _ = fs::write(state_file(), e); } None => { let _ = fs::remove_file(state_file()); } }
+}
 fn backup() -> Result<(), String> {
     let f = dir().join(format!("stasis_{}.json", chrono::Local::now().format("%Y%m%d_%H%M%S")));
     fs::write(f, serde_json::to_string_pretty(&snapshot()).unwrap()).map_err(|e| e.to_string())
@@ -42,6 +46,7 @@ fn status() -> Status {
     let expiry = snap.get("PauseUpdatesExpiryTime").cloned().flatten();
     let start = snap.get("PauseFeatureUpdatesStartTime").cloned().flatten();
     let total_days = match (start.as_deref().map(chrono::DateTime::parse_from_rfc3339), expiry.as_deref().map(chrono::DateTime::parse_from_rfc3339)) { (Some(Ok(s)), Some(Ok(e))) => (e - s).num_days(), _ => 0 };
+    let by_app = expiry.is_some() && fs::read_to_string(state_file()).map(|s| Some(s.trim()) == expiry.as_deref()).unwrap_or(false);
     let days_left = expiry.as_ref()
         .and_then(|e| chrono::DateTime::parse_from_rfc3339(e).ok())
         .map(|d| (d.with_timezone(&Utc) - Utc::now()).num_days()).unwrap_or(0);
@@ -50,14 +55,19 @@ fn status() -> Status {
     let build: u32 = g("CurrentBuild").parse().unwrap_or(0);
     let name = g("ProductName").replace("Windows 10", if build >= 22000 { "Windows 11" } else { "Windows 10" });
     let ver = g("DisplayVersion");
-    Status { paused: days_left > 0, expiry, days_left, total_days, os: format!("{} {} (build {})", name, ver, build).replace("  ", " ") }
+    Status { paused: days_left > 0, expiry, days_left, total_days, by_app: by_app && days_left > 0, os: format!("{} {} (build {})", name, ver, build).replace("  ", " ") }
 }
 
 #[tauri::command]
-fn apply(days: Option<i64>, date: Option<String>) -> Result<String, String> {
+fn apply(days: Option<i64>, date: Option<String>, extend: Option<bool>) -> Result<String, String> {
     let now = Utc::now();
     let end = match (days, date) {
-        (Some(d), _) => now + Duration::days(d),
+        (Some(d), _) => {
+            let cur = snapshot().get("PauseUpdatesExpiryTime").cloned().flatten()
+                .and_then(|e| chrono::DateTime::parse_from_rfc3339(&e).ok())
+                .map(|x| x.with_timezone(&Utc)).filter(|c| *c > now);
+            match (extend.unwrap_or(false), cur) { (true, Some(c)) => c + Duration::days(d), _ => now + Duration::days(d) }
+        }
         (_, Some(s)) => NaiveDate::parse_from_str(&s, "%Y-%m-%d").map_err(|_| "Use a date like 2029-12-31.")?
             .and_hms_opt(0, 0, 0).unwrap().and_utc(),
         _ => return Err("Pick a duration first.".into()),
@@ -68,6 +78,7 @@ fn apply(days: Option<i64>, date: Option<String>) -> Result<String, String> {
     let mut m = Snap::new();
     for k in KEYS { m.insert(k.into(), Some(if k.contains("Start") { s.clone() } else { e.clone() })); }
     write_snap(&m)?;
+    mark(Some(&e));
     Ok(format!("Updates frozen until {}", end.format("%d %b %Y")))
 }
 
@@ -75,6 +86,7 @@ fn apply(days: Option<i64>, date: Option<String>) -> Result<String, String> {
 fn resume() -> Result<String, String> {
     backup()?;
     write_snap(&KEYS.iter().map(|k| (k.to_string(), None)).collect())?;
+    mark(None);
     Ok("Updates resumed".into())
 }
 
@@ -88,12 +100,22 @@ fn backups() -> Vec<String> {
 fn restore(name: String) -> Result<String, String> {
     if name.contains(['/', '\\']) { return Err("Invalid backup name.".into()); }
     let s: Snap = serde_json::from_str(&fs::read_to_string(dir().join(&name)).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
-    backup()?; write_snap(&s)?;
+    backup()?; write_snap(&s)?; mark(None);
     Ok("Backup restored".into())
 }
 
 #[tauri::command]
 fn mica() -> bool { MICA.load(Ordering::Relaxed) }
+
+#[tauri::command]
+fn version() -> String { env!("CARGO_PKG_VERSION").to_string() }
+
+#[tauri::command]
+fn open_url(url: String) -> Result<(), String> {
+    const OK: [&str; 3] = ["https://github.com/Shariqtechie/Stasis", "https://x.com/intent/post", "https://www.reddit.com/submit"];
+    if !OK.iter().any(|p| url.starts_with(p)) { return Err("Blocked link".into()); }
+    std::process::Command::new("explorer").arg(&url).spawn().map(|_| ()).map_err(|e| e.to_string())
+}
 
 fn main() {
     tauri::Builder::default()
@@ -105,6 +127,6 @@ fn main() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![status, apply, resume, backups, restore, mica])
+        .invoke_handler(tauri::generate_handler![status, apply, resume, backups, restore, mica, version, open_url])
         .run(tauri::generate_context!()).expect("error while running Stasis");
 }

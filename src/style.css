@@ -34,3 +34,11 @@ input[type=date]{width:100%;margin-top:8px;padding:9px;border-radius:10px;border
 #toast.show{transform:translate(-50%,0)}#toast.err{border-color:#ff6b7a}
 button:focus-visible,input:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+[hidden]{display:none!important}
+body.win{--glow:var(--vio)}
+.info{font-size:12.5px;line-height:1.45;text-align:center;color:#d9d3ff;background:rgba(139,123,255,.12);border:1px solid rgba(139,123,255,.35);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.links{display:flex;justify-content:center;gap:22px}
+.tb #abt{font-size:15px}
+.modal{position:fixed;inset:36px 0 0;background:rgba(7,9,15,.82);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px;z-index:5}
+.ab{width:100%;text-align:center;margin:0;padding:20px}.ab h3{font-size:21px}.ab h3 small{color:var(--mut);font-size:12px;font-weight:400;margin-left:6px}
+.ab p{margin:8px 0;color:var(--mut)}.ab p b{color:var(--tx)}.ab .go{margin:12px 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px}.wide{width:100%}

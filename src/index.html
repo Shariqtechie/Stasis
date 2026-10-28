@@ -1,12 +1,14 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stasis</title><link rel="stylesheet" href="style.css"></head><body class="live">
-<div class="tb" data-tauri-drag-region><span>❄ Stasis</span><div><button id="min" aria-label="Minimize">&#8211;</button><button id="cls" class="x" aria-label="Close">&#10005;</button></div></div>
+<div class="tb" data-tauri-drag-region><span>❄ Stasis</span><div><button id="abt" aria-label="About">&#9432;</button><button id="min" aria-label="Minimize">&#8211;</button><button id="cls" class="x" aria-label="Close">&#10005;</button></div></div>
 <main><div class="os" id="os">Reading system…</div>
 <div class="hero"><svg viewBox="0 0 100 100"><defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter></defs><circle class="track" cx="50" cy="50" r="45" fill="none" stroke-width="3"/><circle id="glow" class="glow" cx="50" cy="50" r="45" fill="none" stroke-width="6" stroke-dasharray="282.7" stroke-dashoffset="282.7" filter="url(#gl)"/><circle id="bar" class="bar" cx="50" cy="50" r="45" fill="none" stroke-width="3" stroke-dasharray="282.7" stroke-dashoffset="282.7"/></svg>
-<div class="mid"><b id="days">0</b><span>days frozen</span></div></div>
+<div class="mid"><b id="days">0</b><span id="unit">days frozen</span></div></div>
 <div class="state" id="state">Updates are running</div><div class="until" id="until">Nothing is paused yet</div>
-<div class="card"><p>Freeze updates for</p><div class="chips" id="chips"></div><input type="date" id="date" hidden aria-label="Custom end date"></div>
+<div class="info" id="info" hidden>Paused from Windows Settings. Freeze with Stasis to pause for much longer.</div>
+<div class="card" id="pick"><p id="plabel">Freeze updates for</p><div class="chips" id="chips"></div><input type="date" id="date" hidden aria-label="Custom end date"></div>
 <button class="go" id="go">Freeze updates</button>
-<div style="text-align:center"><button class="ghost" id="resume">Resume updates</button></div>
+<div class="links"><button class="ghost" id="ext" hidden>Extend freeze</button><button class="ghost" id="resume" hidden>Resume updates</button></div>
 <div class="card" id="bk" hidden><p>Backups (saved before every change)</p><div id="list"></div></div>
 <div class="note">Frozen updates include security patches. Resume and update every few months.</div></main>
+<div class="modal" id="about" hidden><div class="card ab"><h3>Stasis <small id="ver"></small></h3><p>Freeze Windows Update for years, not weeks. Free, open source, and it never connects to the internet.</p><p>Made by <b>Shariqtechie</b></p><p>If Stasis saved you from a forced restart, a star helps other people find it.</p><button class="go" data-u="https://github.com/Shariqtechie/Stasis">★ Star on GitHub</button><div class="two"><button class="chip" id="share">Share on X</button><button class="chip" id="copy">Copy link</button></div><button class="chip wide" data-u="https://github.com/Shariqtechie/Stasis/issues/new/choose">Report a bug or request a feature</button><button class="ghost" id="closeab">Close</button></div></div>
 <div id="toast"></div><script src="app.js"></script></body></html>

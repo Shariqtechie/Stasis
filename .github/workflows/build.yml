@@ -47,13 +47,34 @@ jobs:
           $c = [regex]::new('(?m)^version\s*=\s*"[^"]*"').Replace($c, "version = `"$v`"", 1)
           Set-Content src-tauri/Cargo.toml $c -NoNewline
 
+      - name: Prepare changelog
+        if: steps.v.outputs.version != ''
+        shell: pwsh
+        run: |
+          $v = "${{ steps.v.outputs.version }}"
+          $cl = Get-Content CHANGELOG.md -Raw
+          $m = [regex]::Match($cl, '(?ms)^## \[Unreleased\][^\r\n]*\r?\n(.*?)(?=^## \[|\z)')
+          $notes = $m.Groups[1].Value.Trim()
+          if ($notes) {
+            $date = Get-Date -Format 'yyyy-MM-dd'
+            $new = "## [Unreleased]`n`n## [$v] - $date`n`n$notes`n`n"
+            $cl = $cl.Remove($m.Index, $m.Length).Insert($m.Index, $new)
+            Set-Content CHANGELOG.md $cl -NoNewline
+          } else {
+            $e = [regex]::Escape($v)
+            $m2 = [regex]::Match($cl, "(?ms)^## \[$e\][^\r\n]*\r?\n(.*?)(?=^## \[|\z)")
+            $notes = $m2.Groups[1].Value.Trim()
+          }
+          if (-not $notes) { $notes = "Maintenance release." }
+          Set-Content RELEASE_NOTES.md $notes
+
       - name: Commit version bump
         if: inputs.version != ''
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml
+          git add package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml CHANGELOG.md
           git diff --cached --quiet
           if ($LASTEXITCODE -ne 0) { git commit -m "chore: release v${{ steps.v.outputs.version }}"; git push }
           $global:LASTEXITCODE = 0
@@ -83,4 +104,5 @@ jobs:
           name: Stasis v${{ steps.v.outputs.version }}
           prerelease: ${{ inputs.prerelease == true }}
           files: dist/*
+          body_path: RELEASE_NOTES.md
           generate_release_notes: true

@@ -34,7 +34,8 @@
 <section><div class="w"><h2>Questions</h2><div style="margin-top:28px">
 <details><summary>Is it safe to freeze updates for years?</summary><p>It also pauses security patches, so freeze for as long as you can accept that risk. Many people use it on offline machines, lab PCs, or to dodge a bad update, then resume every few months to catch up.</p></details>
 <details><summary>Will Windows SmartScreen warn me?</summary><p>Possibly. New open-source tools often show a "not commonly downloaded" notice until they build reputation. Compare the SHA256 in each release with your download, or build it from source.</p></details>
-<details><summary>How do I undo it?</summary><p>Click Resume in Stasis, or restore any earlier backup. Both are one click.</p></details>
+<details><summary>How do I undo it?</summary><p>Click Resume in Stasis, or restore a backup. You can also open Settings, then Windows Update, and click Resume updates. Stasis does not need to be open.</p></details>
+<details><summary>How is this different from tools that disable Windows Update?</summary><p>Tools that stop services or block Microsoft servers are often reported to break the Microsoft Store and app installs, and some users say they had to reinstall Windows. Stasis only sets the pause dates Windows Settings already uses, so nothing is disabled or removed.</p></details>
 <details><summary>Does it break Windows Update?</summary><p>No. It doesn't disable services or edit system files. It sets the pause dates that Windows Settings already understands.</p></details>
 <details><summary>Why admin rights?</summary><p>The pause values live in HKEY_LOCAL_MACHINE, which only administrators can write.</p></details></div></div></section>
 
