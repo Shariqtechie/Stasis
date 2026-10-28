@@ -1,7 +1,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use chrono::{NaiveDate, Utc, Duration};
 use serde::Serialize;
-use std::{collections::BTreeMap, fs, path::PathBuf};
+use std::{collections::BTreeMap, fs, path::PathBuf, sync::atomic::{AtomicBool, Ordering}};
+static MICA: AtomicBool = AtomicBool::new(false);
 use winreg::{enums::*, RegKey};
 
 const PATH: &str = r"SOFTWARE\Microsoft\WindowsUpdate\UX\Settings";
@@ -9,7 +10,7 @@ const KEYS: [&str; 6] = ["PauseUpdatesExpiryTime","PauseFeatureUpdatesStartTime"
 type Snap = BTreeMap<String, Option<String>>;
 
 #[derive(Serialize)]
-struct Status { paused: bool, expiry: Option<String>, days_left: i64, os: String }
+struct Status { paused: bool, expiry: Option<String>, days_left: i64, total_days: i64, os: String }
 
 fn hklm() -> RegKey { RegKey::predef(HKEY_LOCAL_MACHINE) }
 fn dir() -> PathBuf {
@@ -37,7 +38,10 @@ fn backup() -> Result<(), String> {
 
 #[tauri::command]
 fn status() -> Status {
-    let expiry = snapshot().get("PauseUpdatesExpiryTime").cloned().flatten();
+    let snap = snapshot();
+    let expiry = snap.get("PauseUpdatesExpiryTime").cloned().flatten();
+    let start = snap.get("PauseFeatureUpdatesStartTime").cloned().flatten();
+    let total_days = match (start.as_deref().map(chrono::DateTime::parse_from_rfc3339), expiry.as_deref().map(chrono::DateTime::parse_from_rfc3339)) { (Some(Ok(s)), Some(Ok(e))) => (e - s).num_days(), _ => 0 };
     let days_left = expiry.as_ref()
         .and_then(|e| chrono::DateTime::parse_from_rfc3339(e).ok())
         .map(|d| (d.with_timezone(&Utc) - Utc::now()).num_days()).unwrap_or(0);
@@ -46,7 +50,7 @@ fn status() -> Status {
     let build: u32 = g("CurrentBuild").parse().unwrap_or(0);
     let name = g("ProductName").replace("Windows 10", if build >= 22000 { "Windows 11" } else { "Windows 10" });
     let ver = g("DisplayVersion");
-    Status { paused: days_left > 0, expiry, days_left, os: format!("{} {} (build {})", name, ver, build).replace("  ", " ") }
+    Status { paused: days_left > 0, expiry, days_left, total_days, os: format!("{} {} (build {})", name, ver, build).replace("  ", " ") }
 }
 
 #[tauri::command]
@@ -88,8 +92,19 @@ fn restore(name: String) -> Result<String, String> {
     Ok("Backup restored".into())
 }
 
+#[tauri::command]
+fn mica() -> bool { MICA.load(Ordering::Relaxed) }
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![status, apply, resume, backups, restore])
+        .setup(|app| {
+            use tauri::Manager;
+            if let Some(w) = app.get_webview_window("main") {
+                let fx = tauri::window::EffectsBuilder::new().effect(tauri::window::Effect::Mica).build();
+                MICA.store(w.set_effects(fx).is_ok(), Ordering::Relaxed);
+            }
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![status, apply, resume, backups, restore, mica])
         .run(tauri::generate_context!()).expect("error while running Stasis");
 }

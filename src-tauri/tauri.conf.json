@@ -1,5 +1,33 @@
-{"productName":"Stasis","version":"1.0.0","identifier":"com.shariqtechie.stasis",
-"build":{"frontendDist":"../src"},
-"app":{"withGlobalTauri":true,"security":{"csp":null},
-"windows":[{"title":"Stasis","width":440,"height":780,"resizable":false,"center":true,"theme":"Dark"}]},
-"bundle":{"active":false,"icon":["icons/icon.ico"]}}
+{
+  "productName": "Stasis",
+  "version": "1.0.0",
+  "identifier": "com.shariqtechie.stasis",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Stasis",
+        "width": 440,
+        "height": 800,
+        "resizable": false,
+        "center": true,
+        "theme": "Dark",
+        "decorations": false,
+        "transparent": true,
+        "shadow": true
+      }
+    ]
+  },
+  "bundle": {
+    "active": false,
+    "icon": [
+      "icons/icon.ico"
+    ]
+  }
+}

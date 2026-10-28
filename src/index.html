@@ -1,13 +1,12 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stasis</title>
-<link rel="stylesheet" href="style.css"></head><body class="live">
-<h1>Stasis</h1><div class="os" id="os">Reading system…</div>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stasis</title><link rel="stylesheet" href="style.css"></head><body class="live">
+<div class="tb" data-tauri-drag-region><span>❄ Stasis</span><div><button id="min" aria-label="Minimize">&#8211;</button><button id="cls" class="x" aria-label="Close">&#10005;</button></div></div>
+<main><div class="os" id="os">Reading system…</div>
 <div class="hero"><svg viewBox="0 0 100 100"><defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter></defs><circle class="track" cx="50" cy="50" r="45" fill="none" stroke-width="3"/><circle id="glow" class="glow" cx="50" cy="50" r="45" fill="none" stroke-width="6" stroke-dasharray="282.7" stroke-dashoffset="282.7" filter="url(#gl)"/><circle id="bar" class="bar" cx="50" cy="50" r="45" fill="none" stroke-width="3" stroke-dasharray="282.7" stroke-dashoffset="282.7"/></svg>
 <div class="mid"><b id="days">0</b><span>days frozen</span></div></div>
 <div class="state" id="state">Updates are running</div><div class="until" id="until">Nothing is paused yet</div>
 <div class="card"><p>Freeze updates for</p><div class="chips" id="chips"></div><input type="date" id="date" hidden aria-label="Custom end date"></div>
 <button class="go" id="go">Freeze updates</button>
-<div style="text-align:center;margin-top:6px"><button class="ghost" id="resume">Resume updates</button></div>
+<div style="text-align:center"><button class="ghost" id="resume">Resume updates</button></div>
 <div class="card" id="bk" hidden><p>Backups (saved before every change)</p><div id="list"></div></div>
-<div class="note">Frozen updates include security patches. Resume and update every few months.</div>
-<div id="toast"></div>
-<script src="app.js"></script></body></html>
+<div class="note">Frozen updates include security patches. Resume and update every few months.</div></main>
+<div id="toast"></div><script src="app.js"></script></body></html>
