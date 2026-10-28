@@ -1,0 +1,8 @@
+name: Feature request
+description: Suggest an idea for Stasis
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes: { label: What should Stasis do, description: Describe the problem you want solved }
+    validations: { required: true }

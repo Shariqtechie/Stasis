@@ -1,0 +1,19 @@
+name: Bug report or test result
+description: Something broke, or tell us how it worked on your edition
+labels: [bug]
+body:
+  - type: dropdown
+    id: edition
+    attributes: { label: Windows edition, options: [Windows 11 Home, Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 10, Other] }
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes: { label: Windows version, placeholder: "24H2, build 26100" }
+    validations: { required: true }
+  - type: input
+    id: stasis
+    attributes: { label: Stasis version, placeholder: v1.0.0 }
+  - type: textarea
+    id: what
+    attributes: { label: What happened, description: Include what you clicked and what you expected, placeholder: "Frozen for 3 years, rebooted, Settings showed no pause" }
+    validations: { required: true }
