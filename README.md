@@ -2,14 +2,14 @@
 
 <img src="assets/banner.svg" alt="Stasis: freeze Windows Update for years, not weeks" width="100%">
 
-[![Download](https://img.shields.io/github/v/release/Shariqtechie/pause-windows-updates?label=download&color=7fe1ff&style=for-the-badge)](https://github.com/Shariqtechie/pause-windows-updates/releases/latest)
-[![Stars](https://img.shields.io/github/stars/Shariqtechie/pause-windows-updates?style=for-the-badge&color=8b7bff)](https://github.com/Shariqtechie/pause-windows-updates/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/Shariqtechie/pause-windows-updates/total?style=for-the-badge&color=5cf2c3)](https://github.com/Shariqtechie/pause-windows-updates/releases)
-[![License](https://img.shields.io/github/license/Shariqtechie/pause-windows-updates?style=for-the-badge)](LICENSE)
+[![Download](https://img.shields.io/github/v/release/Shariqtechie/Stasis?label=download&color=7fe1ff&style=for-the-badge)](https://github.com/Shariqtechie/Stasis/releases/latest)
+[![Stars](https://img.shields.io/github/stars/Shariqtechie/Stasis?style=for-the-badge&color=8b7bff)](https://github.com/Shariqtechie/Stasis/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/Shariqtechie/Stasis/total?style=for-the-badge&color=5cf2c3)](https://github.com/Shariqtechie/Stasis/releases)
+[![License](https://img.shields.io/github/license/Shariqtechie/Stasis?style=for-the-badge)](LICENSE)
 
 **Windows 11 lets you pause updates for 5 weeks. Stasis pauses them for up to 5 years.**
 
-[Download](https://github.com/Shariqtechie/pause-windows-updates/releases/latest/download/Stasis.exe) · [Website](https://shariqtechie.github.io/pause-windows-updates/) · [Report a bug](../../issues/new/choose)
+[Download](https://github.com/Shariqtechie/Stasis/releases/latest/download/Stasis.exe) · [Website](https://shariqtechie.github.io/Stasis/) · [Report a bug](../../issues/new/choose)
 
 </div>
 
@@ -38,7 +38,7 @@
 
 ## Quick start
 
-1. Download **[Stasis.exe](https://github.com/Shariqtechie/pause-windows-updates/releases/latest/download/Stasis.exe)** from the latest release.
+1. Download **[Stasis.exe](https://github.com/Shariqtechie/Stasis/releases/latest/download/Stasis.exe)** from the latest release.
 2. Run it and allow the admin prompt. The pause values live in `HKEY_LOCAL_MACHINE`.
 3. Choose a duration and click **Freeze updates**.
 4. Click **Resume updates** whenever you want to go back to normal.
@@ -84,7 +84,7 @@ Bugs, ideas, and VM test results are all welcome. See [CONTRIBUTING.md](CONTRIBU
 
 ## Star history
 
-[![Star History](https://api.star-history.com/svg?repos=Shariqtechie/pause-windows-updates&type=Date)](https://star-history.com/#Shariqtechie/pause-windows-updates&Date)
+[![Star History](https://api.star-history.com/svg?repos=Shariqtechie/Stasis&type=Date)](https://star-history.com/#Shariqtechie/Stasis&Date)
 
 ## License
 
