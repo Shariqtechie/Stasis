@@ -22,6 +22,9 @@ All notable changes to Stasis are documented here. The release workflow turns th
 - Backups now live in %APPDATA%\Stasis\backups instead of the working folder
 
 ### Fixed
+- Freezes made with older builds are now recognized: Windows Settings allows 5 weeks at most, so any longer pause is treated as a Stasis freeze
+- A freeze ending within 24 hours no longer shows as not paused, and the day count rounds up
+- The About button icon looked pixelated; it is now a crisp vector icon
 - The custom date option was missing from the old app
 - Backups could land in System32 when run as administrator
 - Square glow around the progress ring

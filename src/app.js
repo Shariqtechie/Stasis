@@ -14,7 +14,7 @@ function render(){
  $("os").textContent=s.os;
  $("state").textContent={none:"Updates are running",app:"Updates are frozen",win:"Paused in Windows Settings"}[mode];
  $("until").textContent=s.paused?"Until "+new Date(s.expiry).toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"}):"Nothing is paused yet";
- $("unit").textContent=mode=="win"?"days paused":"days frozen";
+ $("unit").textContent=(s.days_left==1?"day":"days")+(mode=="win"?" paused":" frozen");
  $("info").hidden=mode!="win";
  $("pick").hidden=mode=="app"&&!ext;$("go").hidden=$("pick").hidden;
  $("plabel").textContent=ext?"Extend freeze by":"Freeze updates for";

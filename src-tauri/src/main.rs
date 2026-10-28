@@ -46,10 +46,13 @@ fn status() -> Status {
     let expiry = snap.get("PauseUpdatesExpiryTime").cloned().flatten();
     let start = snap.get("PauseFeatureUpdatesStartTime").cloned().flatten();
     let total_days = match (start.as_deref().map(chrono::DateTime::parse_from_rfc3339), expiry.as_deref().map(chrono::DateTime::parse_from_rfc3339)) { (Some(Ok(s)), Some(Ok(e))) => (e - s).num_days(), _ => 0 };
-    let by_app = expiry.is_some() && fs::read_to_string(state_file()).map(|s| Some(s.trim()) == expiry.as_deref()).unwrap_or(false);
-    let days_left = expiry.as_ref()
+    let secs_left = expiry.as_ref()
         .and_then(|e| chrono::DateTime::parse_from_rfc3339(e).ok())
-        .map(|d| (d.with_timezone(&Utc) - Utc::now()).num_days()).unwrap_or(0);
+        .map(|d| (d.with_timezone(&Utc) - Utc::now()).num_seconds()).unwrap_or(0);
+    let days_left = if secs_left > 0 { (secs_left + 86_399) / 86_400 } else { 0 };
+    // Windows Settings pauses for 5 weeks (35 days) at most, so anything longer must be a Stasis freeze.
+    let marked = expiry.is_some() && fs::read_to_string(state_file()).map(|s| Some(s.trim()) == expiry.as_deref()).unwrap_or(false);
+    let by_app = marked || days_left > 36 || total_days > 36;
     let cv = hklm().open_subkey(r"SOFTWARE\Microsoft\Windows NT\CurrentVersion").ok();
     let g = |n: &str| cv.as_ref().and_then(|k| k.get_value::<String, _>(n).ok()).unwrap_or_default();
     let build: u32 = g("CurrentBuild").parse().unwrap_or(0);

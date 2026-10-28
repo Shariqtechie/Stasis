@@ -42,3 +42,4 @@ body.win{--glow:var(--vio)}
 .modal{position:fixed;inset:36px 0 0;background:rgba(7,9,15,.82);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px;z-index:5}
 .ab{width:100%;text-align:center;margin:0;padding:20px}.ab h3{font-size:21px}.ab h3 small{color:var(--mut);font-size:12px;font-weight:400;margin-left:6px}
 .ab p{margin:8px 0;color:var(--mut)}.ab p b{color:var(--tx)}.ab .go{margin:12px 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px}.wide{width:100%}
+.tb #abt svg{display:block;margin:auto}
