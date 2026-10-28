@@ -4,6 +4,8 @@ All notable changes to Stasis are documented here. When you run the release work
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-28
+
 ### Added
 - Stasis is a native Windows app built from scratch with Rust and Tauri, replacing the Python tool
 - Dark glass UI with a live countdown ring that scales to the chosen freeze length

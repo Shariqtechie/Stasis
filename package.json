@@ -1,1 +1,1 @@
-{"name":"stasis","version":"1.0.0","private":true,"scripts":{"tauri":"tauri","build":"tauri build --no-bundle"},"devDependencies":{"@tauri-apps/cli":"^2"}}
+{"name":"stasis","version": "2.0.0","private":true,"scripts":{"tauri":"tauri","build":"tauri build --no-bundle"},"devDependencies":{"@tauri-apps/cli":"^2"}}
