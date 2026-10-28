@@ -1,9 +1,18 @@
 name: Build & Release
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, e.g. 1.1.0 (leave empty to only build a test exe)"
+        required: false
+        type: string
+      prerelease:
+        description: "Mark as pre-release"
+        type: boolean
+        default: false
   push:
     branches: [main]
     tags: ['v*']
-  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -13,8 +22,45 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
+
+      - name: Resolve version
+        id: v
+        shell: pwsh
+        run: |
+          $v = "${{ inputs.version }}".Trim().TrimStart('v')
+          if (-not $v -and "${{ github.ref }}" -like "refs/tags/v*") { $v = "${{ github.ref_name }}".TrimStart('v') }
+          if ($v -and $v -notmatch '^\d+\.\d+\.\d+(-[\w.]+)?$') { throw "Version must look like 1.2.3 (got '$v')" }
+          "version=$v" >> $env:GITHUB_OUTPUT
+          if ($v) { "Releasing v$v" } else { "No version given: test build only" }
+
+      - name: Bump version in project files
+        if: steps.v.outputs.version != ''
+        shell: pwsh
+        run: |
+          $v = "${{ steps.v.outputs.version }}"
+          foreach ($f in 'package.json','src-tauri/tauri.conf.json') {
+            $t = Get-Content $f -Raw
+            $t = [regex]::new('"version"\s*:\s*"[^"]*"').Replace($t, "`"version`": `"$v`"", 1)
+            Set-Content $f $t -NoNewline
+          }
+          $c = Get-Content src-tauri/Cargo.toml -Raw
+          $c = [regex]::new('(?m)^version\s*=\s*"[^"]*"').Replace($c, "version = `"$v`"", 1)
+          Set-Content src-tauri/Cargo.toml $c -NoNewline
+
+      - name: Commit version bump
+        if: inputs.version != ''
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) { git commit -m "chore: release v${{ steps.v.outputs.version }}"; git push }
+          $global:LASTEXITCODE = 0
+
       - run: npm install
       - run: npm run build
+
       - name: Package
         shell: pwsh
         run: |
@@ -22,13 +68,19 @@ jobs:
           Copy-Item src-tauri/target/release/stasis.exe dist/Stasis.exe
           $h = (Get-FileHash dist/Stasis.exe -Algorithm SHA256).Hash.ToLower()
           "$h  Stasis.exe" | Out-File dist/Stasis.exe.sha256 -Encoding ascii
+
       - uses: actions/upload-artifact@v4
         with:
           name: Stasis
           path: dist/*
           if-no-files-found: error
+
       - uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: steps.v.outputs.version != ''
         with:
+          tag_name: v${{ steps.v.outputs.version }}
+          target_commitish: ${{ github.ref_name }}
+          name: Stasis v${{ steps.v.outputs.version }}
+          prerelease: ${{ inputs.prerelease == true }}
           files: dist/*
           generate_release_notes: true
