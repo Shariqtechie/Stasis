@@ -26,6 +26,7 @@ All notable changes to Stasis are documented here. When you run the release work
 - Buttons are disabled while an action is running
 
 ### Fixed
+- Windows 11 Settings now shows the pause date after a freeze on a PC that never paused from Settings, because Stasis writes the same pause start time Settings does and removes it on Resume
 - Share on X opened File Explorer instead of the browser
 - The Link copied confirmation was hidden behind the About panel
 - The custom date option was missing from the old app

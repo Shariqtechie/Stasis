@@ -6,7 +6,7 @@ static MICA: AtomicBool = AtomicBool::new(false);
 use winreg::{enums::*, RegKey};
 
 const PATH: &str = r"SOFTWARE\Microsoft\WindowsUpdate\UX\Settings";
-const KEYS: [&str; 6] = ["PauseUpdatesExpiryTime","PauseFeatureUpdatesStartTime","PauseFeatureUpdatesEndTime","PauseQualityUpdatesStartTime","PauseQualityUpdatesEndTime","PauseUpdatesRequestedUntilTime"];
+const KEYS: [&str; 7] = ["PauseUpdatesStartTime","PauseUpdatesExpiryTime","PauseFeatureUpdatesStartTime","PauseFeatureUpdatesEndTime","PauseQualityUpdatesStartTime","PauseQualityUpdatesEndTime","PauseUpdatesRequestedUntilTime"];
 const MAX_DAYS: i64 = 3650;
 type Snap = BTreeMap<String, Option<String>>;
 
