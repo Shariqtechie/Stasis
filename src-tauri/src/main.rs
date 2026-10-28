@@ -7,6 +7,7 @@ use winreg::{enums::*, RegKey};
 
 const PATH: &str = r"SOFTWARE\Microsoft\WindowsUpdate\UX\Settings";
 const KEYS: [&str; 6] = ["PauseUpdatesExpiryTime","PauseFeatureUpdatesStartTime","PauseFeatureUpdatesEndTime","PauseQualityUpdatesStartTime","PauseQualityUpdatesEndTime","PauseUpdatesRequestedUntilTime"];
+const MAX_DAYS: i64 = 3650;
 type Snap = BTreeMap<String, Option<String>>;
 
 #[derive(Serialize)]
@@ -64,18 +65,19 @@ fn status() -> Status {
 #[tauri::command]
 fn apply(days: Option<i64>, date: Option<String>, extend: Option<bool>) -> Result<String, String> {
     let now = Utc::now();
+    let ext = extend.unwrap_or(false);
+    let cur = snapshot().get("PauseUpdatesExpiryTime").cloned().flatten()
+        .and_then(|e| chrono::DateTime::parse_from_rfc3339(&e).ok())
+        .map(|x| x.with_timezone(&Utc)).filter(|c| *c > now);
     let end = match (days, date) {
-        (Some(d), _) => {
-            let cur = snapshot().get("PauseUpdatesExpiryTime").cloned().flatten()
-                .and_then(|e| chrono::DateTime::parse_from_rfc3339(&e).ok())
-                .map(|x| x.with_timezone(&Utc)).filter(|c| *c > now);
-            match (extend.unwrap_or(false), cur) { (true, Some(c)) => c + Duration::days(d), _ => now + Duration::days(d) }
-        }
-        (_, Some(s)) => NaiveDate::parse_from_str(&s, "%Y-%m-%d").map_err(|_| "Use a date like 2029-12-31.")?
+        (Some(d), _) => match (ext, cur) { (true, Some(c)) => c + Duration::days(d), _ => now + Duration::days(d) },
+        (_, Some(s)) => NaiveDate::parse_from_str(&s, "%Y-%m-%d").map_err(|_| "Pick a date first.")?
             .and_hms_opt(0, 0, 0).unwrap().and_utc(),
         _ => return Err("Pick a duration first.".into()),
     };
     if end <= now { return Err("Pick a date in the future.".into()); }
+    if let (true, Some(c)) = (ext, cur) { if end <= c { return Err("Pick a date after your current end date.".into()); } }
+    if end > now + Duration::days(MAX_DAYS) { return Err("The limit is 10 years from today. Pick a shorter time.".into()); }
     backup()?;
     let (s, e) = (now.format("%Y-%m-%dT%H:%M:%SZ").to_string(), end.format("%Y-%m-%dT%H:%M:%SZ").to_string());
     let mut m = Snap::new();
