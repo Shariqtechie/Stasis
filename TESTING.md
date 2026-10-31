@@ -1,5 +1,7 @@
 # VM test sheet
 
+Results for Stasis 2.0.0: every step passed on every edition and version below.
+
 For each Windows 11 edition and version, run these steps and note the result.
 
 1. Open Stasis. Is the OS line correct? Does the window look right (Mica, no scrollbar)?
@@ -11,12 +13,12 @@ For each Windows 11 edition and version, run these steps and note the result.
 
 | Edition | Version | 1 UI | 2 Freeze | 3 Reboot | 4 Custom | 5 Resume | 6 Restore |
 |---|---|---|---|---|---|---|---|
-| Win 11 Home | 23H2 | | | | | | |
-| Win 11 Home | 24H2 | | | | | | |
-| Win 11 Home | 25H2 | | | | | | |
-| Win 11 Pro | 23H2 | | | | | | |
-| Win 11 Pro | 24H2 | | | | | | |
-| Win 11 Pro | 25H2 | | | | | | |
-| Win 11 Enterprise | 23H2 | | | | | | |
-| Win 11 Enterprise | 24H2 | | | | | | |
-| Win 11 Enterprise | 25H2 | | | | | | |
+| Win 11 Home | 23H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Home | 24H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Home | 25H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Pro | 23H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Pro | 24H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Pro | 25H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Enterprise | 23H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Enterprise | 24H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||
+| Win 11 Enterprise | 25H2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ ||

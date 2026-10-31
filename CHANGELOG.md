@@ -4,6 +4,9 @@ All notable changes to Stasis are documented here. When you run the release work
 
 ## [Unreleased]
 
+### Changed
+- Compatibility tables now show Windows 11 Home, Pro, and Enterprise on 23H2, 24H2, and 25H2 as verified
+
 ## [2.0.0] - 2026-10-28
 
 ### Added

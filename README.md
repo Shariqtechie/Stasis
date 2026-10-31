@@ -73,11 +73,11 @@ Windows SmartScreen may warn about a new, unsigned app. Compare the SHA256 file 
 
 | Edition | 23H2 | 24H2 | 25H2 |
 |---|---|---|---|
-| Windows 11 Home | 🟡 Testing | 🟡 Testing | 🟡 Testing |
-| Windows 11 Pro | 🟡 Testing | 🟡 Testing | 🟡 Testing |
-| Windows 11 Enterprise | 🟡 Testing | 🟡 Testing | 🟡 Testing |
+| Windows 11 Home | ✅ Works | ✅ Works | ✅ Works |
+| Windows 11 Pro | ✅ Works | ✅ Works | ✅ Works |
+| Windows 11 Enterprise | ✅ Works | ✅ Works | ✅ Works |
 
-Windows 10 reached end of support in October 2025, so it is low priority. Tested an edition? [Tell us](../../issues/new/choose).
+Every cell was verified in a virtual machine on Stasis 2.0.0: freeze, reboot, check Windows Settings, resume, and restore a backup. Windows 10 reached end of support in October 2025, so it is low priority. Found a problem on your setup? [Tell us](../../issues/new/choose).
 
 <details>
 <summary><b>Is it safe to freeze updates for years?</b></summary>
@@ -103,7 +103,7 @@ To publish a release, run **Actions → Build & Release → Run workflow** and t
 - [x] Frameless Mica window
 - [x] Extend freeze and About panel
 - [ ] Resume reminder before your freeze ends
-- [ ] Verified results for every Windows 11 edition
+- [x] Verified on every Windows 11 edition
 - [ ] winget and Scoop packages
 - [ ] Signed releases
 
